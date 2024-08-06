@@ -49,10 +49,10 @@ pipeline {
         stage('Deploy To EC2') {
             steps {
                 script {
-                     {
+                     
                         sh "docker run -d -p 3000:3000 crud:latest"
                         
-                    }
+                    
                 }
             }
         }
