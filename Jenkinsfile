@@ -36,9 +36,9 @@ pipeline {
        stage('Docker Build And Push') {
             steps {
                 script {
-                    docker.withRegistry('', 'docker-cred') {
+                    docker.withRegistry('', 'pekker-123') {
                         def buildNumber = env.BUILD_NUMBER ?: '1'
-                        def image = docker.build("mohammadayan/crud:latest")
+                        def image = docker.build("pekker123/crud:latest")
                         image.push()
                     }
                 }
@@ -50,7 +50,7 @@ pipeline {
             steps {
                 script {
                      
-                        sh "docker run -d -p 3000:3000 crud:latest"
+                        sh "docker run -d -p 3000:3000 pekker123/crud:latest"
                         
                     
                 }
