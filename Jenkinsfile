@@ -36,7 +36,7 @@ pipeline {
        stage('Docker Build And Push') {
             steps {
                 script {
-                    docker.withRegistry('', 'pekker-123') {
+                    docker.withRegistry('', 'pekker123') {
                         def buildNumber = env.BUILD_NUMBER ?: '1'
                         def image = docker.build("pekker123/crud:latest")
                         image.push()
