@@ -33,13 +33,13 @@ pipeline {
        
         
       
-        stage('Docker Build And Push') {
+       stage('Docker Build And Push') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker-cred') {
+                    docker.withRegistry('', 'docker-cred') {
                         def buildNumber = env.BUILD_NUMBER ?: '1'
-                        sh "docker build -t mohammadayan/crud:latest ."
-                        sh "docker push mohammadayan/crud:latest"
+                        def image = docker.build("mohammadayan/crud:latest")
+                        image.push()
                     }
                 }
             }
