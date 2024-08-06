@@ -1,66 +1,61 @@
+
+
+
 pipeline {
     agent any
+    /*
+    testing
+    tools {
+        docker "dockerr"
+    }
+    */
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockercred')
-        DOCKER_IMAGE = 'huzaifh02/nodejsapp'
-        SSH_CREDENTIALS = 'nodeapp-cred'
-        EC2_IP = '13.233.74.113'
+        SCANNER_HOME = tool 'sonar-scanner'
+        SONAR_TOKEN = credentials('sonar-cred')
+        SONAR_ORGANIZATION = 'ayan'
+        SONAR_PROJECT_KEY = 'ayan_new'
     }
 
     stages {
-        stage('Git Checkout') {
+        
+        stage('Code-Analysis') {
             steps {
-                git branch: 'master', credentialsId: 'gitcred', url: 'https://github.com/huzaifh02/nodejs-mysql-cicd.git'
-            }
-        }
-
-        stage('Clean Docker Images in Jenkins') {
-            steps {
-                sh "sudo docker rmi \$(sudo docker images -q) || true"
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    dockerImage = docker.build("${DOCKER_IMAGE}:latest")
+                withSonarQubeEnv('SonarCloud') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner \
+  -Dsonar.organization=ayan \
+  -Dsonar.projectKey=ayan_new \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=https://sonarcloud.io '''
                 }
             }
         }
-
-        stage('Push Docker Image') {
+       
+        */
+      
+        stage('Docker Build And Push') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'dockercred', toolName: 'docker') {
-                        sh "docker push ${DOCKER_IMAGE}:latest"
+                    withDockerRegistry(credentialsId: 'docker-cred') {
+                        def buildNumber = env.BUILD_NUMBER ?: '1'
+                        sh "docker build -t mohammadayan/crud:latest ."
+                        sh "docker push mohammadayan/crud:latest"
                     }
                 }
             }
         }
-
-        stage('Deploy to EC2') {
+    
+       
+        stage('Deploy To EC2') {
             steps {
-                sshagent([SSH_CREDENTIALS]) {
-                    sh """
-                    ssh -o StrictHostKeyChecking=no ubuntu@${EC2_IP} << 'EOF'
-sudo docker stop \$(sudo docker ps -aq) || true
-sudo docker rm \$(sudo docker ps -aq) || true
-sudo docker rmi \$(sudo docker images -q) || true
-
-sudo docker pull ${DOCKER_IMAGE}:latest
-
-sudo docker run -d --name nodejsapp -p 3000:3000 ${DOCKER_IMAGE}:latest
-EOF
-                    """
+                script {
+                     {
+                        sh "docker run -d -p 3000:3000 crud:latest"
+                        
+                    }
                 }
             }
         }
-    }
-
-    post {
-        always {
-            cleanWs()
-        }
-    }
+        
+}
 }
