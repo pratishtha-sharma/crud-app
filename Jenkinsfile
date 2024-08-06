@@ -3,18 +3,13 @@
 
 pipeline {
     agent any
-    /*
-    testing
-    tools {
-        docker "dockerr"
-    }
-    */
+    
 
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
         SONAR_TOKEN = credentials('sonar-cred')
-        SONAR_ORGANIZATION = 'ayan'
-        SONAR_PROJECT_KEY = 'ayan_new'
+        SONAR_ORGANIZATION = 'jenkins-project-123'
+        SONAR_PROJECT_KEY = 'jenkins-project-123_ci-jenkins'
     }
 
     stages {
@@ -23,8 +18,8 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarCloud') {
                     sh '''$SCANNER_HOME/bin/sonar-scanner \
-  -Dsonar.organization=ayan \
-  -Dsonar.projectKey=ayan_new \
+  -Dsonar.organization=jenkins-project-123 \
+  -Dsonar.projectKey=jenkins-project-123_ci-jenkins \
   -Dsonar.sources=. \
   -Dsonar.host.url=https://sonarcloud.io '''
                 }
@@ -36,7 +31,7 @@ pipeline {
        stage('Docker Build And Push') {
             steps {
                 script {
-                    docker.withRegistry('', 'pekker123') {
+                    docker.withRegistry('', 'docker-cred') {
                         def buildNumber = env.BUILD_NUMBER ?: '1'
                         def image = docker.build("pekker123/crud:latest")
                         image.push()
