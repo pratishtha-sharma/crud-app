@@ -44,7 +44,7 @@ pipeline {
         stage('Deploy To EC2') {
             steps {
                 script {
-                     
+                        sh "docker rm -f $(docker ps -q)"
                         sh "docker run -d -p 3000:3000 pekker123/crud-123:latest"
                         
                     
