@@ -1,5 +1,4 @@
-testing github/
-actions
+testinig
 # DevOps Mentor Task
 
 ## Presentation Video
