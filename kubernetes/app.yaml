@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: my-app-container
-        image: 00mab/crud:56da489
+        image: 00mab/crud:02e67fe
         ports:
         - containerPort: 3000
         imagePullPolicy: Always
