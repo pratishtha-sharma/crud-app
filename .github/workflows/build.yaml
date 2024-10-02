@@ -23,24 +23,23 @@ jobs:
 
       - name: Extract short commit hash
         id: commit
-        run: echo "::set-output name=commit_id::$(git rev-parse --short HEAD)"
+        run: echo "commit_id=$(git rev-parse --short HEAD)" >> $GITHUB_ENV  # Updated to set an environment variable
 
       - name: Build Docker image
-        run: docker build -t 00mab/crud:${{ steps.commit.outputs.commit_id }} .
+        run: docker build -t 00mab/crud:${{ env.commit_id }} .
 
       - name: Push Docker image
-        run: docker push 00mab/crud:${{ steps.commit.outputs.commit_id }}
+        run: docker push 00mab/crud:${{ env.commit_id }}
 
       - name: Update Kubernetes manifest
         run: |
-          sed -i "s|00mab/crud:latest|00mab/crud:${{ steps.commit.outputs.commit_id }}|g" kubernetes/app.yaml
+          sed -i "s|00mab/crud:latest|00mab/crud:${{ env.commit_id }}|g" kubernetes/app.yaml
 
       - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9 # Use a dedicated action for git
         with:
-        token: ${{ secrets.GH_TOKEN }}
-        run: |
-           git config --global user.email "muhmmadayanashiq@gmail.com"
-           git config --global user.name "MuhmmadAyan"
-           git add kubernetes/app.yaml
-           git commit -m "Updated manifest"
-           git push
+          author_name: "MuhmmadAyan"
+          author_email: "muhmmadayanashiq@gmail.com"
+          message: "Updated manifest"
+          add: "kubernetes/app.yaml"
+          token: ${{ secrets.GH_TOKEN }}  # Ensure this secret is set in your GitHub repository
