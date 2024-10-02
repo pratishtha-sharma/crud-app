@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: my-app-container
-        image: 00mab/crud:latestt  # Replace with your actual image
+        image: 00mab/crud:latest  # Replace with your actual image
         ports:
         - containerPort: 3000
         imagePullPolicy: Always
