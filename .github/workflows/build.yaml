@@ -3,9 +3,12 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to trigger the action on
+      - main
     paths-ignore:
-      - 'kubernetes/app.yaml' 
+      - 'kubernetes/app.yaml'
+
+permissions:
+  contents: write
 
 jobs:
   build-and-push:
@@ -23,7 +26,7 @@ jobs:
 
       - name: Extract short commit hash
         id: commit
-        run: echo "commit_id=$(git rev-parse --short HEAD)" >> $GITHUB_ENV  # Updated to set an environment variable
+        run: echo "commit_id=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Build Docker image
         run: docker build -t 00mab/crud:${{ env.commit_id }} .
@@ -36,10 +39,10 @@ jobs:
           sed -i "s|00mab/crud:latest|00mab/crud:${{ env.commit_id }}|g" kubernetes/app.yaml
 
       - name: Commit and push changes
-        uses: EndBug/add-and-commit@v9 # Use a dedicated action for git
+        uses: EndBug/add-and-commit@v9
         with:
           author_name: "MuhmmadAyan"
           author_email: "muhmmadayanashiq@gmail.com"
           message: "Updated manifest"
           add: "kubernetes/app.yaml"
-          token: ${{ secrets.GH_TOKEN }}  # Ensure this secret is set in your GitHub repository
+          github_token: ${{ secrets.GH_TOKEN }}  # This is your GitHub token
