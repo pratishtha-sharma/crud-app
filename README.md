@@ -1,5 +1,4 @@
-Tsting th ci pipeline
-
+1st pipeline test
 # DevOps Mentor Task
 
 ## Presentation Video
