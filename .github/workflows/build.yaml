@@ -35,12 +35,12 @@ jobs:
         run: |
           sed -i "s|00mab/crud:latest|00mab/crud:${{ steps.commit.outputs.commit_id }}|g" kubernetes/app.yaml
 
-      - name: Commit updated Kubernetes manifest
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Commit and push changes
+        with:
+        token: ${{ secrets.GH_TOKEN }}
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add kubernetes/app.yaml
-          git commit -m "Update image tag to ${{ steps.commit.outputs.commit_id }}"
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+           git config --global user.email "muhmmadayanashiq@gmail.com"
+           git config --global user.name "MuhmmadAyan"
+           git add kubernetes/app.yaml
+           git commit -m "Updated manifest"
+           git push
