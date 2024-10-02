@@ -37,10 +37,10 @@ jobs:
 
       - name: Commit updated Kubernetes manifest
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Using the secret that stores the PAT
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add kubernetes/app.yaml
           git commit -m "Update image tag to ${{ steps.commit.outputs.commit_id }}"
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/MuhmmadAyan/crud-app.git HEAD:main
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:main
