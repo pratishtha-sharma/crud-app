@@ -9,4 +9,4 @@ spec:
   ports:
   - protocol: TCP
     port: 80        # Exposes on port 80
-    targetPort: 3000  # Maps to the app's port 3000
+    targetPort: 80  # Maps to the app's port 3000
