@@ -12,9 +12,9 @@ const port = 3000;
 // Create connection to MySQL
 const db = mysql.createConnection({
     host: 'testdb-1.c34egoce037f.ap-south-1.rds.amazonaws.com',
-    user: 'root',
+    user: 'testdb_1',
     password: '12345678',
-    database: 'testdb_1'
+    database: 'testdb-1'
 });
 
 // Connect to MySQL
